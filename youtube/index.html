@@ -1,0 +1,49 @@
+<button onclick="getVideo();">Get video</button>
+
+<script type="text/javascript">
+  function getVidep(){
+      var channelId="UCcA1don221rKq1EmbvQB27g";
+      var apiKey ="AIzaSyBAb3BaOUgtoCjDV8CKkck7IOdtIFflTco";
+      var videosUrl = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId='channelId + "&maxResults=50&key" + apiKey;
+
+      //Get all videos of channel
+      var ajax = new XMLHttpRequest();
+      ajax.open('GET', videosUrl, true);
+      ajax.send();
+      ajax.onreadystatechange = function() {
+          // Check if the request is completed
+          if(this.readyState == 4 && this.status == 200){
+              console.log(this.responseText);
+              var json = JSON.parse(this.responseText);
+              var videos = json.items;
+              console.log(videos);
+
+              var randomNumber = Math.floor(Math.random()*(videos.length+1));
+              var randomVideo = videos[randomNumber];
+              console.log(randomVideo);
+
+              var videoId = randomVideo.id.videoId;
+              var videoUrl = "https://www.googleapis.com/youtube/v3/videos?id=" + videoId + "&part=snippet,contentDetails,statistics&key=" + apiKey;
+
+              //Get single video data
+              var ajax = new XMLHttpRequest();
+              ajax.open("GET", videoUrl, true);
+              ajax.send();
+
+              ajax.onreadystatechange = function () {
+                  if (this.readyState == 4 && this.status == 200){
+                      console.log(this.responseText);
+                      var json = JSON.parse(this.responseText);
+                      var singleVideo = json.items[0].id
+                      var youtubeUrl = "https://www.youtube.com/watch?v=" + singleVideo;
+                      console.log(youtubeUrl);
+
+                      //Open in new window
+                      window.open(youtubeUrl, "window_name", "toolbar=yes")
+
+                      }
+              }
+             }
+      }
+  }
+</script>
